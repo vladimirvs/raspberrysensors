@@ -1,0 +1,66 @@
+    <!doctype html>
+    <html>
+<meta http-equiv="refresh" content="5" >     
+    <head>
+        <title>Dynamic Resize</title>
+        <meta http–equiv="Content-Type" content="text/html; charset=UTF-8" />
+     
+    </head>
+    <body>
+        <div class="wrapper clear">
+	
+        </div>
+
+  <div id="chart_div"></div>
+
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'X');
+      
+      data.addColumn('number', 'Humidity');
+      data.addColumn('number', 'Temperature');
+      
+    //  var recs = {{records|tojson}};
+    
+    var recs =  JSON.parse('{{records | tojson | safe}}');
+      console.log(recs);
+      console.log(recs[0][0]);
+      
+      var sorted_recs = recs.sort(function(a, b) {
+	    return a[0] - b[0];
+      });
+      
+      sorted_recs.forEach(rec => {
+	//  console.log(rec);
+	  console.log(rec); console.log( [rec[0], rec[1]]); 
+	  data.addRow([rec[3].substring(16),  rec[2], rec[1]]); });
+
+
+      var options = {
+		    width: 1000,
+        height: 600,
+        hAxis: {
+          title: 'Time'
+        },
+        vAxis: {
+          title: 'Value'
+        }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+  </script>
+
+
+	
+    </body>
+    </html>
+
